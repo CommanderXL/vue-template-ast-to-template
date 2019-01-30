@@ -1,0 +1,20 @@
+{
+  "name": "vue-template-ast-to-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CommanderXL/vue-template-ast-to-template.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CommanderXL/vue-template-ast-to-template/issues"
+  },
+  "homepage": "https://github.com/CommanderXL/vue-template-ast-to-template#readme"
+}
