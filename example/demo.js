@@ -1,6 +1,6 @@
 const compiler = require('vue-template-compiler')
 const TemplateTransform = require('../lib/index')
-const mpTemplateTransform = require('./mp-template-transform')
+// const mpTemplateTransform = require('./mp-template-transform')
 
 const str = `
 <div id="app" data-hi="okoko"
@@ -19,7 +19,7 @@ const str = `
     <p v-else></p>
   </div>
   hello
-  <input v-model.number.trim="bindCls" focus :placeholder="inputType"/>
+  <input v-model.number.trim="bindCls" focus :placeholder="inputType" @confirm="click(Item)" @blur="click(Item)"/>
   <ul :class="bindCls" class="list" v-if="isShow && isHide">
       <li v-for="(item, key) in data" v-bind:key="key" @click="clickItem(index)">
         {{item}}:{{index}}
@@ -32,6 +32,8 @@ const str = `
 `
 
 const { ast } = compiler.compile(str)
+const templateTransformer = new TemplateTransform()
+const { code } = templateTransformer.generate(ast)
 
-const { code } = mpTemplateTransform.generate(ast)
+// const { code } = mpTemplateTransform.generate(ast)
 console.log(code)

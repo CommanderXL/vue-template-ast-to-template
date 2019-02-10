@@ -21,7 +21,18 @@ const transformer = new TemplateTransform({
   prefix: 'foo'
 })
 
-// call generate method to get the transformed template
+// overwrite exposed methods of the transformer instance and do something you like
+Object.assign(transformer, {
+  genVIf (node) {
+    // do something for v-if directive
+  },
+  genVFor (node) {
+    // do something for v-for directive
+  }
+  ...
+})
+
+// inject the origin vue template ast and call generate method of transformer instance to get the transformed template
 const { code } = transformer.generate(ast)
 ```
 
@@ -29,17 +40,17 @@ All instance properties that can be overwrite:
 
 ### Directives
 
-* genVIf
-* genVFor
-* genEvents
-* genVShow
-* genVModel
-* genVOnce
-* genVBind
-* genVCloak
-* genVHtml
-* genVPre
-* genVText
+* genVIf(`v-if`)
+* genVFor(`v-for`)
+* genEvents(`v-on|@`)
+* genVShow(`v-show`)
+* genVModel(`v-model`)
+* genVOnce(`v-once`)
+* genVBind(`v-bind|:`)
+* genVCloak(`v-cloak`)
+* genVHtml(`v-html`)
+* genVPre(`v-pre`)
+* genVText(`v-text`)
 
 ### Attrs
 
