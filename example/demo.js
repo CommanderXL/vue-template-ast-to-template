@@ -1,5 +1,6 @@
 const compiler = require('vue-template-compiler')
 const TemplateTransform = require('../lib/index')
+const mpTemplateTransform = require('./mp-template-transform')
 
 const str = `
 <div id="app" data-hi="okoko"
@@ -31,7 +32,6 @@ const str = `
 `
 
 const { ast } = compiler.compile(str)
-const transform = new TemplateTransform(ast)
 
-const { code } = transform.generate()
+const { code } = mpTemplateTransform.generate(ast)
 console.log(code)
