@@ -15,25 +15,25 @@ npm install vue-template-transformer --save
 
 ```javascript
 const TemplateTransform = require('vue-template-transformer')
-// get an instance
-const transformer = new TemplateTransform({
-  // some options
-  prefix: 'foo'
-})
 
-// overwrite exposed methods of the transformer instance and do something you like
-Object.assign(transformer, {
+// extend the base template transform
+class NewTemplateTransform extends TemplateTransform {
   genVIf (node) {
     // do something for v-if directive
   },
   genVFor (node) {
     // do something for v-for directive
   }
-  ...
+}
+
+// get an instance
+const newTemplateTranformer = new NewTemplateTransform({
+  // some options
+  prefix: 'foo'
 })
 
 // inject the origin vue template ast and call generate method of transformer instance to get the transformed template
-const { code } = transformer.generate(ast)
+const { code } = newTemplateTranformer.generate(ast)
 ```
 
 All instance properties that can be overwrite:
