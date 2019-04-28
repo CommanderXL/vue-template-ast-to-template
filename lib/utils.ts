@@ -1,10 +1,10 @@
-const isNotEmpty = (str: string): boolean => str !== ''
+export const isNotEmpty = (str: string): boolean => str !== ''
 
-const isBoolean = (boolean: any): boolean => typeof boolean === 'boolean'
+export const isBoolean = (boolean: any): boolean => typeof boolean === 'boolean'
 
-const removeQuotes = (str: string = ''): string => str.replace(/"/g, '')
+export const removeQuotes = (str: string = ''): string => str.replace(/"/g, '')
 
-const makeMap = (string: string, expectLowerCase?: boolean): {
+export const makeMap = (string: string, expectLowerCase?: boolean): {
   (val: string): boolean
 } => {
   const map = Object.create(null)
@@ -14,15 +14,7 @@ const makeMap = (string: string, expectLowerCase?: boolean): {
   return expectLowerCase ? val => map[val.toLowerCase()] : val => map[val]
 }
 
-const isUnaryTag = makeMap(
+export const isUnaryTag = makeMap(
   'area,base,br,col,embed,frame,hr,img,input,isindex,keygen,' +
     'link,meta,param,source,track,wbr'
 )
-
-module.exports = {
-  isNotEmpty,
-  makeMap,
-  isUnaryTag,
-  removeQuotes,
-  isBoolean
-}
