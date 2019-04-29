@@ -20,6 +20,7 @@ const str = `
   </div>
   hello
   <input v-model.number.trim="bindCls" focus :placeholder="inputType" @confirm="click(Item)" @blur="click(Item)"/>
+  <card-list :info="resInfo" :list="list"></card-list>
   <ul :class="bindCls" class="list" v-if="isShow && isHide">
       <li v-for="(item, key) in data" v-bind:key="key" @click="clickItem(index)">
         {{item}}:{{index}}
