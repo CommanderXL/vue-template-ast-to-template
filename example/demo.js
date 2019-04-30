@@ -1,5 +1,5 @@
 const compiler = require('vue-template-compiler')
-const TemplateTransform = require('../lib/index')
+const TemplateTransform = require('../dist/index').default
 // const mpTemplateTransform = require('./mp-template-transform')
 
 const str = `

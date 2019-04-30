@@ -11,13 +11,15 @@
     "url": "git+https://github.com/CommanderXL/vue-template-ast-to-template.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "XRene",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/CommanderXL/vue-template-ast-to-template/issues"
   },
   "homepage": "https://github.com/CommanderXL/vue-template-ast-to-template#readme",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"
   }
 }
