@@ -6,7 +6,7 @@ export type TemplateGenertorRes = {
 
 export type BaseNodeAttr = {
   name: string
-  value: string
+  value: any
 }
 
 export type ASTNode = ASTElement & {

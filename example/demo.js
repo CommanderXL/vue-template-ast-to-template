@@ -11,9 +11,10 @@ const str = `
   v-bind:style="[styleObject]"
   @click.stop="clickItem(item)"
   name="ddd"
+  :is="ok"
   @touchstart.capture="clickItem" >
   <div v-html="vHtml" ref="vHtml-dom">
-    <slot name="demo"></slot>
+    <slot name="demo" :user="user"></slot>
     <p v-if="isShow">3</p>
     <p v-else-if="isHide">34</p>
     <p v-else></p>

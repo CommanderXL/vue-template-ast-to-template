@@ -101,9 +101,7 @@ export default class TemplateGenertor {
       this.genKey(node),
       this.genIs(node),
       this.genRef(node),
-      // TODO: 插槽名
       this.genSlot(node)
-      // TODO: 作用域插槽
     ]
 
     const startTag = `<${[tag, ...directives, ...attrs]
@@ -211,8 +209,8 @@ export default class TemplateGenertor {
         )
           ? ''
           : value === '""'
-          ? `${name}`
-          : `${name}="${removeQuotes(value)}"`
+            ? `${name}`
+            : `${name}="${removeQuotes(value)}"`
       })
       .filter(isNotEmpty)
       .join(' ')
