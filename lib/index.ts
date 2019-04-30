@@ -1,15 +1,11 @@
+import { isUnaryTag, removeQuotes, isNotEmpty, isBoolean } from './utils'
 import {
-  isUnaryTag,
-  removeQuotes,
-  isNotEmpty,
-  isBoolean
-} from './utils'
-import { 
   TemplateGenertorRes,
   BaseNodeAttr,
   NodeAttr,
-  builtInDirectives
-} from './types'
+  builtInDirectives,
+  ASTNode
+} from './types/index'
 import DIRECTIVES from './directives'
 
 enum TYPE {
@@ -24,19 +20,19 @@ const onReg = /^@|^v-on:/
 const preserveBindingReg = /(^:|^v-bind:)(style|class|type|key)/
 const customPropertyReg = /(^:|^v-bind:)([\s\S]+)/
 
-const emptyBaseNodeAttr: BaseNodeAttr = { 
-  name: '', 
-  value: '' 
+const emptyBaseNodeAttr: BaseNodeAttr = {
+  name: '',
+  value: ''
 }
 
 export default class TemplateGenertor {
-  ast: object
+  ast: ASTNode
   options: object
   constructor(options = {}) {
     this.options = options
   }
 
-  generate(ast): TemplateGenertorRes {
+  generate(ast: ASTNode): TemplateGenertorRes {
     const res: TemplateGenertorRes = {
       code: ''
     }
@@ -48,7 +44,7 @@ export default class TemplateGenertor {
     return res
   }
 
-  genElement(node): string {
+  genElement(node: ASTNode): string {
     if (!node) {
       return ''
     } else if (node.ifConditions && !node.ifConditionsHasGenerated) {
@@ -62,7 +58,7 @@ export default class TemplateGenertor {
     }
   }
 
-  genIfConditions(node): string {
+  genIfConditions(node: ASTNode): string {
     node.ifConditionsHasGenerated = true
 
     if (!node.ifConditions) {
@@ -78,7 +74,7 @@ export default class TemplateGenertor {
       .join('')
   }
 
-  genNode(node): string {
+  genNode(node: ASTNode): string {
     const tag = this.genTag(node)
     const isUnary = isUnaryTag(tag)
     const childrenNodes = this.genChildren(node)
@@ -119,42 +115,42 @@ export default class TemplateGenertor {
     return [startTag, childrenNodes, endTag].join('')
   }
 
-  genChildren(node): string {
+  genChildren(node: ASTNode): string {
     if (!node || !node.children || !node.children.length) {
       return ''
     }
     return node.children
-      .map(child => this.genElement(child))
+      .map(child => this.genElement(child as ASTNode))
       .filter(isNotEmpty)
       .join('')
   }
 
-  genTag(node): string {
+  genTag(node: ASTNode): string {
     return node.tag
   }
 
-  genText(node): string {
+  genText(node: ASTNode): string {
     const { text = '' } = node
     return text
   }
 
-  genVIf(node): string {
+  genVIf(node: ASTNode): string {
     if (node.if) {
-      return `${DIRECTIVES['if']}="${node.if}"`
+      return `${DIRECTIVES.if}="${node.if}"`
     } else if (node.elseif) {
-      return `${DIRECTIVES['elseif']}="${node.elseif}"`
+      return `${DIRECTIVES.elseif}="${node.elseif}"`
     } else if (node.else) {
-      return `${DIRECTIVES['else']}`
+      return `${DIRECTIVES.else}`
     }
     return ''
   }
-  genVFor(node): string {
+  genVFor(node: ASTNode): string {
     return <string>this.getDirectiveFromAttrsMap(node, 'for', true)
   }
-  genKey(node): string {
+  genKey(node: ASTNode): string {
     return <string>this.getPropFromAttrsMap(node, 'key', true)
   }
-  genEvents(node): string {
+  genEvents(node: ASTNode): string {
     const { attrsMap = {} } = node
     return Object.keys(attrsMap)
       .map(attr => {
@@ -166,18 +162,18 @@ export default class TemplateGenertor {
       .filter(isNotEmpty)
       .join(' ')
   }
-  genVShow(node): string {
+  genVShow(node: ASTNode): string {
     return <string>this.getDirectiveFromAttrsMap(node, 'show', true)
   }
-  genVModel(node): string {
+  genVModel(node: ASTNode): string {
     return <string>this.getDirectiveFromAttrsMap(node, 'model', true)
   }
   /**
-   * 
-   * @param node 
+   *
+   * @param node
    * @returns return this props through v-bind or : property operator expect for style/class/type/key
    */
-  genVBind(node): string {
+  genVBind(node: ASTNode): string {
     const { attrsMap = {} } = node
     return Object.keys(attrsMap)
       .map(attr => {
@@ -196,11 +192,11 @@ export default class TemplateGenertor {
       .join(' ')
   }
   /**
-   * 
-   * @param node 
+   *
+   * @param node
    * @returns return the original html element attrs, like id / placeholder / focus and so on.
    */
-  genAttrs(node): string {
+  genAttrs(node: ASTNode): string {
     const { attrs = [], attrsMap = {} } = node
     if (!attrs.length) {
       return ''
@@ -210,58 +206,65 @@ export default class TemplateGenertor {
     return attrs
       .map(attr => {
         const { name, value } = attr
-        return attrsMapKeys.find(attr => `:${name}` === attr || `v-bind:${name}` === attr)
+        return attrsMapKeys.find(
+          attr => `:${name}` === attr || `v-bind:${name}` === attr
+        )
           ? ''
           : value === '""'
-            ? `${name}`
-            : `${name}="${removeQuotes(value)}"`
+          ? `${name}`
+          : `${name}="${removeQuotes(value)}"`
       })
       .filter(isNotEmpty)
       .join(' ')
   }
-  genIs(node): string {
+  genIs(node: ASTNode): string {
     return <string>this.getPropFromAttrsMap(node, 'is', true)
   }
-  genStyle(node): string {
+  genStyle(node: ASTNode): string {
     const bindStyle = <string>this.getPropFromAttrsMap(node, 'style', true)
     const staticStyle = <string>this.getDomAttrFromAttrsMap(node, 'style', true)
     return `${bindStyle} ${staticStyle}`
   }
-  genClass(node): string {
+  genClass(node: ASTNode): string {
     const bindClass = <string>this.getPropFromAttrsMap(node, 'class', true)
     const staticClass = <string>this.getDomAttrFromAttrsMap(node, 'class', true)
     return `${bindClass} ${staticClass}`
   }
-  genVOnce(node): string {
+  genVOnce(node: ASTNode): string {
     return <string>this.getDirectiveFromAttrsMap(node, 'once', true)
   }
-  genVPre(node): string {
+  genVPre(node: ASTNode): string {
     return <string>this.getDirectiveFromAttrsMap(node, 'pre', true)
   }
-  genVCloak(node): string {
+  genVCloak(node: ASTNode): string {
     return <string>this.getDirectiveFromAttrsMap(node, 'cloak', true)
   }
-  genVHtml(node): string {
+  genVHtml(node: ASTNode): string {
     return <string>this.getDirectiveFromAttrsMap(node, 'html', true)
   }
-  genVText(node): string {
+  genVText(node: ASTNode): string {
     return <string>this.getDirectiveFromAttrsMap(node, 'text', true)
   }
-  genRef(node): string {
+  genRef(node: ASTNode): string {
     return <string>this.getDomAttrFromAttrsMap(node, 'ref', true)
   }
-  genSlot(node): string {
+  genSlot(node: ASTNode): string {
     if (node.tag === 'slot') {
       return <string>this.getDomAttrFromAttrsMap(node, 'name', true)
     }
     return ''
   }
-  getDirectiveFromAttrsMap(node, name: builtInDirectives, alias?: string | boolean, needNormalize?: boolean): string | NodeAttr {
+  getDirectiveFromAttrsMap(
+    node: ASTNode,
+    name: builtInDirectives,
+    alias?: string | boolean,
+    needNormalize?: boolean
+  ): string | NodeAttr {
     if (isBoolean(alias)) {
       needNormalize = <boolean>alias
     }
     let res: BaseNodeAttr | NodeAttr
-    const directive = DIRECTIVES[name] || DIRECTIVES[<string>alias]
+    const directive = DIRECTIVES[name] || DIRECTIVES[<builtInDirectives>alias]
     const emptyMap = Object.assign({}, emptyBaseNodeAttr)
     const { attrsMap = {} } = node
     if (!directive) {
@@ -271,21 +274,29 @@ export default class TemplateGenertor {
       const realDir = Object.keys(attrsMap).find(attr => dirReg.test(attr))
       res = realDir
         ? attrsMap[realDir]
-          ? { name: realDir, value: `"${attrsMap[realDir]}"` }
-          : Object.assign(emptyMap, { noMap: true })
+          ? {
+              name: realDir,
+              value: `"${attrsMap[realDir]}"`
+            }
+          : Object.assign(emptyMap, {
+              noMap: true
+            })
         : emptyMap
     }
     return needNormalize ? this.normalizeMap(res) : res
   }
   // TODO:
-  getPropFromAttrsMap(node, name: string, needNormalize?: boolean) {
+  getPropFromAttrsMap(node: ASTNode, name: string, needNormalize?: boolean) {
     const { attrsMap = {} } = node
     const emptyMap = Object.assign({}, emptyBaseNodeAttr)
-    const value = attrsMap[`:${name}`] || attrsMap[`${DIRECTIVES['bind']}:${name}`]
-    let res: BaseNodeAttr = !value ? emptyMap : { name: `:${name}`, value: `"${value}"` }
+    const value =
+      attrsMap[`:${name}`] || attrsMap[`${DIRECTIVES.bind}:${name}`]
+    let res: BaseNodeAttr = !value
+      ? emptyMap
+      : { name: `:${name}`, value: `"${value}"` }
     return needNormalize ? this.normalizeMap(res) : res
   }
-  getDomAttrFromAttrsMap(node, name: string, needNormalize?: boolean) {
+  getDomAttrFromAttrsMap(node: ASTNode, name: string, needNormalize?: boolean) {
     const { attrsMap = {} } = node
     const emptyMap = Object.assign({}, emptyBaseNodeAttr)
     let res: BaseNodeAttr

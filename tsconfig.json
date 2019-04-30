@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "rootDir": "lib",
+    "outDir": "dist",
+    "lib": ["es6", "dom"]
+  },
+  "compileOnSave": true,
+  "exclude": ["test"],
+  "include": ["lib", "index.d.ts", "test.d.ts"]
+}

@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/CommanderXL/vue-template-ast-to-template/issues"
   },
-  "homepage": "https://github.com/CommanderXL/vue-template-ast-to-template#readme"
+  "homepage": "https://github.com/CommanderXL/vue-template-ast-to-template#readme",
+  "dependencies": {
+    "vue-template-compiler": "^2.6.10"
+  }
 }
