@@ -1,10 +1,10 @@
 {
   "name": "vue-template-ast-to-template",
-  "version": "1.0.0",
-  "description": "",
-  "main": "lib/index.js",
+  "version": "0.1.0",
+  "description": "transform vue template ast to the template what you want",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bundle": "rollup --config"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,12 @@
   "homepage": "https://github.com/CommanderXL/vue-template-ast-to-template#readme",
   "dependencies": {},
   "devDependencies": {
+    "rollup": "^1.10.1",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-typescript": "^1.0.1",
+    "tslib": "^1.9.3",
+    "typescript": "^3.4.5",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"
   }
