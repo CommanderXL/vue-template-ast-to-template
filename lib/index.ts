@@ -5,7 +5,7 @@ import {
   NodeAttr,
   builtInDirectives,
   ASTNode
-} from './types/index'
+} from './types'
 import DIRECTIVES from './directives'
 
 enum TYPE {
@@ -284,7 +284,7 @@ export default class TemplateGenertor {
     return needNormalize ? this.normalizeMap(res) : res
   }
   // TODO:
-  getPropFromAttrsMap(node: ASTNode, name: string, needNormalize?: boolean) {
+  getPropFromAttrsMap(node: ASTNode, name: string, needNormalize?: boolean): string | NodeAttr {
     const { attrsMap = {} } = node
     const emptyMap = Object.assign({}, emptyBaseNodeAttr)
     const value =
@@ -294,7 +294,7 @@ export default class TemplateGenertor {
       : { name: `:${name}`, value: `"${value}"` }
     return needNormalize ? this.normalizeMap(res) : res
   }
-  getDomAttrFromAttrsMap(node: ASTNode, name: string, needNormalize?: boolean) {
+  getDomAttrFromAttrsMap(node: ASTNode, name: string, needNormalize?: boolean): string | NodeAttr {
     const { attrsMap = {} } = node
     const emptyMap = Object.assign({}, emptyBaseNodeAttr)
     let res: BaseNodeAttr
