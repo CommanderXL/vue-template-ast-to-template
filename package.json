@@ -4,7 +4,8 @@
   "description": "transform vue template ast to the template what you want",
   "main": "dist/index.js",
   "scripts": {
-    "bundle": "rollup --config"
+    "bundle": "rollup --config",
+    "typings": "tsc -d --declarationDir typings"
   },
   "repository": {
     "type": "git",
@@ -29,5 +30,5 @@
     "tslib": "^1.9.3",
     "typescript": "^3.4.5"
   },
-  "typings": "./types/index.d.ts"
+  "typings": "./typings/index.d.ts"
 }
